@@ -274,7 +274,7 @@ fn draw_field(f: &mut Frame, label: &str, value: &str, area: Rect, focused: bool
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::HostEntry;
+    use crate::ssh_config::HostEntry;
     use ratatui::backend::TestBackend;
     use ratatui::Terminal;
 
@@ -285,6 +285,7 @@ mod tests {
             user: "testuser".to_string(),
             port: "22".to_string(),
             identity_file: "~/.ssh/id_rsa".to_string(),
+            proxy_command: String::new(),
             extra: vec![],
         }
     }
@@ -323,6 +324,7 @@ mod tests {
             user: "admin".to_string(),
             port: "2222".to_string(),
             identity_file: "~/.ssh/custom_key".to_string(),
+            proxy_command: String::new(),
             extra: vec!["  ProxyCommand ssh jump".to_string()],
         };
 
@@ -472,6 +474,7 @@ mod tests {
             user: "admin".to_string(),
             port: "2222".to_string(),
             identity_file: "~/.ssh/id_rsa".to_string(),
+            proxy_command: String::new(),
             extra: vec!["  ServerAliveInterval 60".to_string()],
         };
 
@@ -481,6 +484,7 @@ mod tests {
             user: String::new(),
             port: String::new(),
             identity_file: String::new(),
+            proxy_command: String::new(),
             extra: vec![],
         };
 

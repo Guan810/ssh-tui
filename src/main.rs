@@ -1,6 +1,7 @@
 mod app;
 mod config;
 mod ssh;
+mod ssh_config;
 mod ui;
 
 use anyhow::Result;
