@@ -24,11 +24,10 @@ fn draw_normal(f: &mut Frame, app: &App) {
         ])
         .split(f.area());
 
-    let title = Block::default()
-        .borders(Borders::ALL)
-        .title(" SSH TUI ");
-    let title_content = Paragraph::new("↑↓/jk: navigate | Enter: connect | i: edit | n: new | q/Esc: quit")
-        .block(title);
+    let title = Block::default().borders(Borders::ALL).title(" SSH TUI ");
+    let title_content =
+        Paragraph::new("↑↓/jk: navigate | Enter: connect | i: edit | n: new | q/Esc: quit")
+            .block(title);
     f.render_widget(title_content, chunks[0]);
 
     let main_chunks = Layout::default()
@@ -70,54 +69,80 @@ fn draw_normal(f: &mut Frame, app: &App) {
         "Ready".to_string()
     };
 
-    let footer = Paragraph::new(footer_text)
-        .block(Block::default().borders(Borders::ALL).title(" Status "));
+    let footer =
+        Paragraph::new(footer_text).block(Block::default().borders(Borders::ALL).title(" Status "));
     f.render_widget(footer, chunks[2]);
 }
 
 fn draw_details_pane(f: &mut Frame, app: &App, area: Rect) {
-    let details_block = Block::default()
-        .borders(Borders::ALL)
-        .title(" Details ");
+    let details_block = Block::default().borders(Borders::ALL).title(" Details ");
 
     if let Some(entry) = app.selected_host() {
         let mut lines = vec![
             Line::from(vec![
-                Span::styled("Host: ", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+                Span::styled(
+                    "Host: ",
+                    Style::default()
+                        .fg(Color::Cyan)
+                        .add_modifier(Modifier::BOLD),
+                ),
                 Span::raw(&entry.host),
             ]),
             Line::from(vec![
-                Span::styled("HostName: ", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+                Span::styled(
+                    "HostName: ",
+                    Style::default()
+                        .fg(Color::Cyan)
+                        .add_modifier(Modifier::BOLD),
+                ),
                 Span::raw(&entry.hostname),
             ]),
         ];
 
         if !entry.user.is_empty() {
             lines.push(Line::from(vec![
-                Span::styled("User: ", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+                Span::styled(
+                    "User: ",
+                    Style::default()
+                        .fg(Color::Cyan)
+                        .add_modifier(Modifier::BOLD),
+                ),
                 Span::raw(&entry.user),
             ]));
         }
 
         if !entry.port.is_empty() {
             lines.push(Line::from(vec![
-                Span::styled("Port: ", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+                Span::styled(
+                    "Port: ",
+                    Style::default()
+                        .fg(Color::Cyan)
+                        .add_modifier(Modifier::BOLD),
+                ),
                 Span::raw(&entry.port),
             ]));
         }
 
         if !entry.identity_file.is_empty() {
             lines.push(Line::from(vec![
-                Span::styled("IdentityFile: ", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+                Span::styled(
+                    "IdentityFile: ",
+                    Style::default()
+                        .fg(Color::Cyan)
+                        .add_modifier(Modifier::BOLD),
+                ),
                 Span::raw(&entry.identity_file),
             ]));
         }
 
         if !entry.extra.is_empty() {
             lines.push(Line::from(""));
-            lines.push(Line::from(vec![
-                Span::styled("Additional Config:", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
-            ]));
+            lines.push(Line::from(vec![Span::styled(
+                "Additional Config:",
+                Style::default()
+                    .fg(Color::Cyan)
+                    .add_modifier(Modifier::BOLD),
+            )]));
             for extra_line in &entry.extra {
                 if !extra_line.trim().is_empty() {
                     lines.push(Line::from(Span::styled(
@@ -128,8 +153,7 @@ fn draw_details_pane(f: &mut Frame, app: &App, area: Rect) {
             }
         }
 
-        let details = Paragraph::new(lines)
-            .block(details_block);
+        let details = Paragraph::new(lines).block(details_block);
         f.render_widget(details, area);
     } else {
         let empty_text = Paragraph::new("No host selected")
@@ -238,7 +262,9 @@ fn draw_form_fields(f: &mut Frame, app: &App, area: Rect) {
 
 fn draw_field(f: &mut Frame, label: &str, value: &str, area: Rect, focused: bool) {
     let style = if focused {
-        Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
+        Style::default()
+            .fg(Color::Yellow)
+            .add_modifier(Modifier::BOLD)
     } else {
         Style::default()
     };
@@ -260,13 +286,12 @@ fn draw_field(f: &mut Frame, label: &str, value: &str, area: Rect, focused: bool
     };
 
     let content = Line::from(display_value);
-    let paragraph = Paragraph::new(content)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .border_style(border_style)
-                .title(full_label),
-        );
+    let paragraph = Paragraph::new(content).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(border_style)
+            .title(full_label),
+    );
 
     f.render_widget(paragraph, area);
 }
@@ -300,9 +325,7 @@ mod tests {
         let backend = TestBackend::new(80, 24);
         let mut terminal = Terminal::new(backend).unwrap();
 
-        terminal
-            .draw(|f| draw(f, &app))
-            .unwrap();
+        terminal.draw(|f| draw(f, &app)).unwrap();
 
         let buffer = terminal.backend().buffer().clone();
         let content = buffer.content();
@@ -333,9 +356,7 @@ mod tests {
         let backend = TestBackend::new(120, 30);
         let mut terminal = Terminal::new(backend).unwrap();
 
-        terminal
-            .draw(|f| draw(f, &app))
-            .unwrap();
+        terminal.draw(|f| draw(f, &app)).unwrap();
 
         let buffer = terminal.backend().buffer().clone();
         let text: String = buffer.content().iter().map(|cell| cell.symbol()).collect();
@@ -355,9 +376,7 @@ mod tests {
         let backend = TestBackend::new(80, 24);
         let mut terminal = Terminal::new(backend).unwrap();
 
-        terminal
-            .draw(|f| draw(f, &app))
-            .unwrap();
+        terminal.draw(|f| draw(f, &app)).unwrap();
 
         let buffer = terminal.backend().buffer().clone();
         let text: String = buffer.content().iter().map(|cell| cell.symbol()).collect();
@@ -375,9 +394,7 @@ mod tests {
         let backend = TestBackend::new(80, 24);
         let mut terminal = Terminal::new(backend).unwrap();
 
-        terminal
-            .draw(|f| draw(f, &app))
-            .unwrap();
+        terminal.draw(|f| draw(f, &app)).unwrap();
 
         let buffer = terminal.backend().buffer().clone();
         let text: String = buffer.content().iter().map(|cell| cell.symbol()).collect();
@@ -398,9 +415,7 @@ mod tests {
         let backend = TestBackend::new(80, 24);
         let mut terminal = Terminal::new(backend).unwrap();
 
-        terminal
-            .draw(|f| draw(f, &app))
-            .unwrap();
+        terminal.draw(|f| draw(f, &app)).unwrap();
 
         let buffer = terminal.backend().buffer().clone();
         let text: String = buffer.content().iter().map(|cell| cell.symbol()).collect();
@@ -417,9 +432,7 @@ mod tests {
         let backend = TestBackend::new(80, 24);
         let mut terminal = Terminal::new(backend).unwrap();
 
-        terminal
-            .draw(|f| draw(f, &app))
-            .unwrap();
+        terminal.draw(|f| draw(f, &app)).unwrap();
 
         let buffer = terminal.backend().buffer().clone();
         let text: String = buffer.content().iter().map(|cell| cell.symbol()).collect();
@@ -436,9 +449,7 @@ mod tests {
         let backend = TestBackend::new(80, 24);
         let mut terminal = Terminal::new(backend).unwrap();
 
-        terminal
-            .draw(|f| draw(f, &app))
-            .unwrap();
+        terminal.draw(|f| draw(f, &app)).unwrap();
 
         let buffer = terminal.backend().buffer().clone();
         let text: String = buffer.content().iter().map(|cell| cell.symbol()).collect();
@@ -453,9 +464,7 @@ mod tests {
         let backend = TestBackend::new(100, 24);
         let mut terminal = Terminal::new(backend).unwrap();
 
-        terminal
-            .draw(|f| draw(f, &app))
-            .unwrap();
+        terminal.draw(|f| draw(f, &app)).unwrap();
 
         let buffer = terminal.backend().buffer().clone();
         let text: String = buffer.content().iter().map(|cell| cell.symbol()).collect();
@@ -494,7 +503,11 @@ mod tests {
         let app = App::test_with_hosts(vec![host_with_all_fields.clone()]);
         terminal.draw(|f| draw(f, &app)).unwrap();
         let buffer_full = terminal.backend().buffer().clone();
-        let text_full: String = buffer_full.content().iter().map(|cell| cell.symbol()).collect();
+        let text_full: String = buffer_full
+            .content()
+            .iter()
+            .map(|cell| cell.symbol())
+            .collect();
 
         assert!(text_full.contains("admin"));
         assert!(text_full.contains("2222"));
@@ -504,7 +517,11 @@ mod tests {
         let app_minimal = App::test_with_hosts(vec![host_minimal]);
         terminal.draw(|f| draw(f, &app_minimal)).unwrap();
         let buffer_minimal = terminal.backend().buffer().clone();
-        let text_minimal: String = buffer_minimal.content().iter().map(|cell| cell.symbol()).collect();
+        let text_minimal: String = buffer_minimal
+            .content()
+            .iter()
+            .map(|cell| cell.symbol())
+            .collect();
 
         assert!(text_minimal.contains("minimal"));
         assert!(text_minimal.contains("example.org"));

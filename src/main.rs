@@ -7,7 +7,9 @@ mod ui;
 use anyhow::Result;
 use app::App;
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind, KeyModifiers},
+    event::{
+        self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind, KeyModifiers,
+    },
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -105,11 +107,7 @@ fn handle_normal_input<B: ratatui::backend::Backend + std::io::Write>(
     Ok(false)
 }
 
-fn handle_form_input(
-    app: &mut App,
-    code: KeyCode,
-    modifiers: KeyModifiers,
-) -> Result<()> {
+fn handle_form_input(app: &mut App, code: KeyCode, modifiers: KeyModifiers) -> Result<()> {
     match code {
         KeyCode::Esc => {
             app.cancel_form();

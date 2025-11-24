@@ -23,6 +23,7 @@ impl CommandExecutor for RealCommandExecutor {
 pub struct SshConnection {
     executor: Box<dyn CommandExecutor>,
     ssh_binary: String,
+    #[allow(dead_code)]
     timeout: Duration,
 }
 
@@ -35,6 +36,7 @@ impl SshConnection {
         }
     }
 
+    #[allow(dead_code)]
     pub fn with_executor(
         ssh_binary: String,
         timeout: Duration,
@@ -60,6 +62,7 @@ impl SshConnection {
         }
     }
 
+    #[allow(dead_code)]
     pub fn timeout(&self) -> Duration {
         self.timeout
     }
@@ -105,11 +108,8 @@ mod tests {
             success: true,
             exit_code: None,
         });
-        let connection = SshConnection::with_executor(
-            "ssh".to_string(),
-            Duration::from_secs(30),
-            executor,
-        );
+        let connection =
+            SshConnection::with_executor("ssh".to_string(), Duration::from_secs(30), executor);
 
         let result = connection.connect("test-host").unwrap();
         assert_eq!(result, "Successfully connected to test-host");
@@ -122,11 +122,8 @@ mod tests {
             success: false,
             exit_code: Some(255),
         });
-        let connection = SshConnection::with_executor(
-            "ssh".to_string(),
-            Duration::from_secs(30),
-            executor,
-        );
+        let connection =
+            SshConnection::with_executor("ssh".to_string(), Duration::from_secs(30), executor);
 
         let result = connection.connect("test-host").unwrap();
         assert_eq!(result, "Connection to test-host exited with code 255");
