@@ -1,0 +1,16 @@
+# Sample SSH config used for parser tests
+Host app-server
+  HostName app.example.com
+  User deploy
+  Port 2222
+  IdentityFile ~/.ssh/app_rsa
+  ProxyCommand ssh -W %h:%p bastion
+  LocalForward 8080 localhost:80
+  # inline comment
+  ForwardAgent yes
+
+Host db-server
+  HostName db.internal
+  User postgres
+  IdentityFile ~/.ssh/db_rsa
+  DynamicForward 9000 localhost:9000

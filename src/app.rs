@@ -1,6 +1,7 @@
 use crate::{
-    config::{load_host_entries, update_host_entry, upsert_host_entry, Config, HostEntry},
+    config::Config,
     ssh::SshConnection,
+    ssh_config::{load_host_entries, update_host_entry, upsert_host_entry, HostEntry},
 };
 use anyhow::Result;
 use std::time::Duration;
@@ -284,6 +285,7 @@ mod tests {
             user: "user".to_string(),
             port: String::new(),
             identity_file: String::new(),
+            proxy_command: String::new(),
             extra: Vec::new(),
         }
     }
