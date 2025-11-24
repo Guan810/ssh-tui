@@ -1,0 +1,11 @@
+# SSH TUI Configuration Example
+# Copy this file to ~/.config/ssh-tui/config.toml
+
+# Path to the SSH binary (default: "ssh")
+# You can specify a custom path if needed
+ssh_binary = "ssh"
+
+# Connection timeout in seconds (default: 30)
+# This value is stored but not currently enforced by the Command::status call
+# It's available for future timeout implementations
+timeout = 30
