@@ -1,9 +1,6 @@
 use crate::config::Config;
 use anyhow::{Context, Result};
-use std::{
-    fs,
-    path::{Path, PathBuf},
-};
+use std::{fs, path::Path};
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct HostEntry {
@@ -41,6 +38,7 @@ impl HostEntry {
     }
 }
 
+#[allow(dead_code)]
 pub fn list_entries() -> Result<Vec<HostEntry>> {
     load_host_entries()
 }
@@ -55,8 +53,7 @@ pub fn load_host_entries_from_path(path: &Path) -> Result<Vec<HostEntry>> {
         return Ok(Vec::new());
     }
 
-    let contents = fs::read_to_string(path)
-        .context("Failed to read SSH config file")?;
+    let contents = fs::read_to_string(path).context("Failed to read SSH config file")?;
 
     let mut entries = Vec::new();
     let mut current: Option<HostEntry> = None;
@@ -122,11 +119,13 @@ pub fn load_host_entries_from_path(path: &Path) -> Result<Vec<HostEntry>> {
     Ok(entries)
 }
 
+#[allow(dead_code)]
 pub fn add_host_entry(entry: &HostEntry) -> Result<()> {
     let path = Config::ssh_config_path()?;
     add_host_entry_at_path(&path, entry)
 }
 
+#[allow(dead_code)]
 pub fn add_host_entry_at_path(path: &Path, entry: &HostEntry) -> Result<()> {
     entry.validate()?;
     let mut lines = read_config_lines(path)?;
@@ -162,7 +161,11 @@ pub fn update_host_entry(original_host: &str, entry: &HostEntry) -> Result<()> {
     update_host_entry_at_path(&path, original_host, entry)
 }
 
-pub fn update_host_entry_at_path(path: &Path, original_host: &str, entry: &HostEntry) -> Result<()> {
+pub fn update_host_entry_at_path(
+    path: &Path,
+    original_host: &str,
+    entry: &HostEntry,
+) -> Result<()> {
     entry.validate()?;
     let mut lines = read_config_lines(path)?;
 
@@ -175,11 +178,13 @@ pub fn update_host_entry_at_path(path: &Path, original_host: &str, entry: &HostE
     write_config_lines(path, &lines)
 }
 
+#[allow(dead_code)]
 pub fn delete_host_entry(host: &str) -> Result<()> {
     let path = Config::ssh_config_path()?;
     delete_host_entry_at_path(&path, host)
 }
 
+#[allow(dead_code)]
 pub fn delete_host_entry_at_path(path: &Path, host: &str) -> Result<()> {
     let mut lines = read_config_lines(path)?;
 
@@ -196,16 +201,14 @@ fn read_config_lines(path: &Path) -> Result<Vec<String>> {
         return Ok(Vec::new());
     }
 
-    let contents = fs::read_to_string(path)
-        .context("Failed to read SSH config file")?;
+    let contents = fs::read_to_string(path).context("Failed to read SSH config file")?;
 
     Ok(contents.lines().map(|line| line.to_string()).collect())
 }
 
 fn write_config_lines(path: &Path, lines: &[String]) -> Result<()> {
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent)
-            .context("Failed to create SSH config directory")?;
+        fs::create_dir_all(parent).context("Failed to create SSH config directory")?;
     }
 
     let mut buffer = String::new();
@@ -228,6 +231,7 @@ fn replace_block(lines: &mut Vec<String>, start: usize, end: usize, entry: &Host
     lines.splice(start..end, render_host_entry_lines(entry));
 }
 
+#[allow(dead_code)]
 fn remove_block(lines: &mut Vec<String>, start: usize, end: usize) {
     lines.drain(start..end);
 
@@ -324,6 +328,7 @@ fn find_host_block(lines: &[String], host: &str) -> Option<(usize, usize)> {
 mod tests {
     use super::*;
     use std::io::Write;
+    use std::path::PathBuf;
     use tempfile::NamedTempFile;
 
     fn fixture_path(name: &str) -> PathBuf {
@@ -347,7 +352,10 @@ mod tests {
         assert_eq!(app.identity_file, "~/.ssh/app_rsa");
         assert_eq!(app.proxy_command, "ssh -W %h:%p bastion");
         assert!(app.extra.iter().any(|line| line.contains("LocalForward")));
-        assert!(app.extra.iter().any(|line| line.contains("# inline comment")));
+        assert!(app
+            .extra
+            .iter()
+            .any(|line| line.contains("# inline comment")));
         assert!(app.extra.iter().any(|line| line.contains("ForwardAgent")));
     }
 
@@ -368,7 +376,7 @@ mod tests {
         let contents = fs::read_to_string(path).unwrap();
         write!(temp, "{}", contents).unwrap();
 
-        let mut entries = load_host_entries_from_path(temp.path()).unwrap();
+        let entries = load_host_entries_from_path(temp.path()).unwrap();
         let mut entry = entries
             .into_iter()
             .find(|e| e.host == "app-server")
@@ -432,7 +440,7 @@ mod tests {
 
     #[test]
     fn test_delete_unknown_host_fails() {
-        let mut temp = NamedTempFile::new().unwrap();
+        let temp = NamedTempFile::new().unwrap();
         delete_host_entry_at_path(temp.path(), "missing").unwrap_err();
     }
 

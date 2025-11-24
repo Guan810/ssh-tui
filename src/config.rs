@@ -34,10 +34,10 @@ impl Config {
     pub fn load() -> Result<Self> {
         let config_path = Self::config_path()?;
         if config_path.exists() {
-            let contents = fs::read_to_string(&config_path)
-                .context("Failed to read config file")?;
-            let config: Config = toml::from_str(&contents)
-                .context("Failed to parse config file")?;
+            let contents =
+                fs::read_to_string(&config_path).context("Failed to read config file")?;
+            let config: Config =
+                toml::from_str(&contents).context("Failed to parse config file")?;
             Ok(config)
         } else {
             Ok(Self::default())
@@ -57,12 +57,10 @@ impl Config {
     #[allow(dead_code)]
     pub fn save(&self, path: &Path) -> Result<()> {
         if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)
-                .context("Failed to create config directory")?;
+            fs::create_dir_all(parent).context("Failed to create config directory")?;
         }
 
-        let contents = toml::to_string_pretty(self)
-            .context("Failed to serialize config")?;
+        let contents = toml::to_string_pretty(self).context("Failed to serialize config")?;
         fs::write(path, contents).context("Failed to write config file")
     }
 }
