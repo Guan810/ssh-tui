@@ -254,6 +254,22 @@ impl App {
             FormField::IdentityFile => &mut self.form_entry.identity_file,
         }
     }
+
+    #[cfg(test)]
+    pub fn test_with_hosts(hosts: Vec<HostEntry>) -> Self {
+        Self {
+            hosts,
+            selected: 0,
+            status: None,
+            state: AppState::Normal,
+            form_entry: HostEntry::default(),
+            form_field: FormField::Host,
+            form_error: None,
+            config: Config::default(),
+            ssh_connection: SshConnection::new("ssh".to_string(), Duration::from_secs(30)),
+            original_host_name: None,
+        }
+    }
 }
 
 #[cfg(test)]

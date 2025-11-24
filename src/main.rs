@@ -64,7 +64,7 @@ fn handle_normal_input<B: ratatui::backend::Backend + std::io::Write>(
     code: KeyCode,
 ) -> Result<bool> {
     match code {
-        KeyCode::Char('q') => {
+        KeyCode::Char('q') | KeyCode::Esc => {
             return Ok(true);
         }
         KeyCode::Down | KeyCode::Char('j') => app.next(),
